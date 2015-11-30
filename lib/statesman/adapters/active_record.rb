@@ -123,3 +123,7 @@ module Statesman
     end
   end
 end
+
+class ActiveRecord::RecordNotUnique < RuntimeError
+  # Need to figure out to handle this in AR 2.3
+end
