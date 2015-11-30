@@ -47,7 +47,7 @@ module Statesman
           # already loaded result set. Introduced in rails/rails@b097ebe
           transitions_for_parent.to_a.sort_by(&:sort_key)
         else
-          transitions_for_parent
+          transitions_for_parent.find(:all, order: "sort_key ASC")
         end
       end
 
