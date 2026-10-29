@@ -47,7 +47,7 @@ module Statesman
           # already loaded result set. Introduced in rails/rails@b097ebe
           transitions_for_parent.to_a.sort_by(&:sort_key)
         else
-          transitions_for_parent.find(:all, order: "sort_key ASC")
+          transitions_for_parent.order(:sort_key).to_a
         end
       end
 
@@ -109,8 +109,8 @@ module Statesman
       def serialized?(transition_class)
         if ::ActiveRecord.respond_to?(:gem_version) &&
            ::ActiveRecord.gem_version >= Gem::Version.new('4.2.0.a')
-          transition_class.columns_hash["metadata"].
-            cast_type.is_a?(::ActiveRecord::Type::Serialized)
+          transition_class.type_for_attribute("metadata").
+            is_a?(::ActiveRecord::Type::Serialized)
         else
           transition_class.serialized_attributes.include?("metadata")
         end
@@ -122,8 +122,4 @@ module Statesman
       end
     end
   end
-end
-
-class ActiveRecord::RecordNotUnique < RuntimeError
-  # Need to figure out to handle this in AR 2.3
 end
